@@ -25,7 +25,7 @@ public class SearchThread implements Runnable {
         findFiles(dir, ext, text);
     }
 
-    public void findFiles(File dir, String ext, String text) {
+    private void findFiles(File dir, String ext, String text) {
         synchronized (filesQueue) {
             File[] files = dir.listFiles();
             if (files == null) {

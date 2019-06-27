@@ -10,14 +10,11 @@ import javafx.scene.control.cell.TextFieldTreeCell;
 import testcase.logic.SearchThread;
 
 import java.io.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class Controller {
-
     private Thread logSearchThread;
     private Thread showFoundFileThread;
 
@@ -86,7 +83,9 @@ public class Controller {
             super();
             this.setOnMouseClicked(event -> {
                 TreeItem<File> treeItem = getTreeItem();
-                if (treeItem.isLeaf() && event.getClickCount() == 2) {
+                if (treeItem.isLeaf() &&
+                        event.getClickCount() == 2 &&
+                        treeItem.getValue().isFile()) {
                     new Thread(() -> openFileInNewTab(treeItem.getValue())).start();
                 }
             });
@@ -112,8 +111,12 @@ public class Controller {
     }
 
     public class FoundFileThread implements Runnable {
+//        List with found files, which is synchronized between FoundFileThread and SearchThread
         private final List<File> filesQueue;
-        TreeItem<File> root = new TreeItem<>(new File(input_dir.getText().split("[/\\\\]")[0]));
+        TreeItem<File> root = new TreeItem<>(new File(""));
+
+//        TreeView for showing all found files
+//        Right now it show only list of paths to files, not like FileTree
         TreeView<File> customTreeView = new TreeView<>();
 
         FoundFileThread(List<File> filesQueue) {
@@ -155,31 +158,13 @@ public class Controller {
         }
 
         void updateFileTreeView(File file) {
-            String[] filePath = file.toString().split("[/\\\\]");
-//            TODO: MAKE IT GREAT AGAIN
-            TreeItem<File> rootPath = root;
-            int i = 0;
-            for (String dir : filePath) {
-                TreeItem<File> itemFile = new TreeItem<>(new File(dir));
-                rootPath = itemFile;
-                if (!rootPath.getChildren().contains(itemFile)) {
-                    if (i == 0){
-                        rootPath = itemFile;
-                        root.getChildren().add(itemFile);
-                        i++;
-                    } else {
-                        rootPath.getChildren().add(itemFile);
-                    }
-                }
-            }
             updateFileTreeView();
-            TreeItem<File> finalRootPath = rootPath;
             Platform.runLater(() -> {
-//                TreeItem<File> itemFile = new TreeItem<>(file);
+                TreeItem<File> itemFile = new TreeItem<>(file);
                 root.setExpanded(true);
-//                root.getChildren().add(itemFile);
+                root.getChildren().add(itemFile);
                 customTreeView.setCellFactory(treeView -> new FileTreeCell());
-                customTreeView.setRoot(finalRootPath);
+                customTreeView.setRoot(root);
                 customTreeView.setMinSize(300, 540);
                 split_pane.getItems().add(customTreeView);
             });
