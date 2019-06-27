@@ -15,7 +15,7 @@ ListView with vertical orientation
 
 Application has 3 threads - main javafx-thread with UI, 
 searchThread for searching text in log files and 
-foundFilesThread for add found files to TreeView. When you click on "Search" button both threads start, but UI is still responsive.
+foundFilesThread for adding found files to TreeView. When you click on "Search" button both threads start, but UI is still responsive.
 
 Weaknesses of my solution:
 * TreeView is something like List, not like FileTreeView for only found files
