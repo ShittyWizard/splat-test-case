@@ -18,11 +18,12 @@ searchThread for searching text in log files and
 foundFilesThread for add found files to TreeView. When you click on "Search" button both threads start, but UI is still responsive.
 
 Weaknesses of my solution:
-* TreeView is something like List, not like FileTreeView for only found files.
+* TreeView is something like List, not like FileTreeView for only found files
 * Not adaptive UI
 * Pagination could be good idea for opening big files in new tab
+* Found text in files is not highlighted
 * I don't use (because of poor experience) design patterns and structure of JavaFX projects, 
-it can cause issues with further support.
+it can cause issues with further support
 
 Using JavaFX was interested for me (that was my 1st javafx-project), 
 and it helps me improve my UI and multithreading skills. 
